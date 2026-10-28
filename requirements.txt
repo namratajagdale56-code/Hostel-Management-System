@@ -1,0 +1,7 @@
+
+Flask
+Flask-PyMongo
+pymongo
+gunicorn
+openpyxl
+reportlab

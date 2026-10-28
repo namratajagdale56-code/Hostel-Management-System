@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rooms | Admin Panel</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+body {
+    background: #fae5e5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* NAVBAR */
+nav {
+    background: #ffffff;
+    padding: 14px 25px;
+    border-bottom: 2px solid #dc2626;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-area img { height: 44px; }
+.logo-text { font-size: 22px; font-weight: 700; }
+.sgi { color: #dc2626; }
+.hub { color: #000; }
+
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+    text-decoration: none; color: #dc2626;
+    font-weight: 600; font-size: 16px;
+    transition: 0.3s;
+}
+.nav-links a:hover { color: #a31212; }
+
+/* HAMBURGER BUTTON */
+.hamburger {
+    display: none;
+    font-size: 32px;
+    background: none;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+}
+
+/* MOBILE MENU */
+@media (max-width: 850px) {
+
+    .hamburger { display: block; }
+
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        width: 65%;
+        background: rgba(255,255,255,0.95);
+        padding: 20px;
+        border-radius: 14px;
+        display: none;
+        flex-direction: column;
+        gap: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+}
+
+/* TITLE */
+.page-title {
+    text-align:center;
+    margin-top:25px;
+    font-size:30px;
+    font-weight:800;
+    color:#7a1a1a;
+}
+
+/* DOWNLOAD BUTTONS */
+.download-box {
+    width: 92%;
+    max-width: 1100px;
+    margin: 20px auto 0;
+    display: flex;
+    gap: 12px;
+}
+
+.d-btn {
+    padding: 10px 18px;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.excel-btn { background:#059669; }
+.excel-btn:hover { background:#047857; }
+
+.pdf-btn { background:#dc2626; }
+.pdf-btn:hover { background:#b91c1c; }
+
+/* ADD BUTTON */
+.header-row {
+    width: 92%;
+    max-width: 1100px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-btn {
+    background: #dc2626;
+    padding: 10px 18px;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.add-btn:hover { background: #b01c1c; }
+
+/* ROOM CARDS */
+.room-card {
+    width: 92%; max-width: 900px;
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    margin: 18px auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.label { font-weight: 700; color: #7a1a1a; }
+.value { font-weight: 500; }
+
+.badge { padding: 6px 14px; border-radius: 20px; font-weight: 600; }
+.available { background: #d1fae5; color: #065f46; }
+.full { background: #fee2e2; color: #991b1b; }
+
+.actions { margin-top: 15px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn { padding: 9px 16px; border-radius: 8px; color: white; font-weight: 600; text-decoration: none; }
+.edit-btn { background: #d97706; }
+.assign-btn { background:#2563eb; }
+.delete-btn { background: #dc2626; }
+
+footer {
+    margin-top: auto;
+    background: #b91c1c;
+    padding: 16px;
+    text-align: center;
+    color: white;
+}
+</style>
+
+<script>
+    function toggleMenu() {
+        document.querySelector(".nav-links").classList.toggle("open");
+    }
+</script>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo-area">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="logo-text"><span class="sgi">SGI</span> <span class="hub">Living Hub</span></span>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.add_room') }}">Add Room</a>
+    </div>
+</nav>
+
+<h1 class="page-title">Manage Rooms</h1>
+
+<!-- DOWNLOAD BUTTONS -->
+<div class="download-box">
+    <a href="{{ url_for('admin.download_rooms_excel') }}" class="d-btn excel-btn">📥 Download Excel</a>
+    <a href="{{ url_for('admin.download_rooms_pdf') }}" class="d-btn pdf-btn">📄 Download PDF</a>
+</div>
+
+<div class="header-row">
+    <a href="{{ url_for('admin.add_room') }}" class="add-btn">+ Add New Room</a>
+</div>
+
+{% if rooms|length == 0 %}
+<div class="room-card" style="text-align:center; font-size:18px; color:#7a1a1a;">
+    No rooms added yet.
+</div>
+{% endif %}
+
+{% for r in rooms %}
+<div class="room-card">
+    <div class="row"><span class="label">Room No:</span> <span class="value">{{ r.room_no }}</span></div>
+    <div class="row"><span class="label">Capacity:</span> <span class="value">{{ r.capacity }}</span></div>
+    <div class="row"><span class="label">Occupied:</span> <span class="value">{{ r.occupied }}</span></div>
+    <div class="row"><span class="label">Available Beds:</span> <span class="value">{{ r.available_beds }}</span></div>
+    <div class="row"><span class="label">Block:</span> <span class="value">{{ r.block }}</span></div>
+
+    <div class="row">
+        <span class="label">Status:</span>
+        {% if r.available_beds > 0 %}
+            <span class="badge available">Available</span>
+        {% else %}
+            <span class="badge full">Full</span>
+        {% endif %}
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('admin.edit_room', id=r._id) }}" class="btn edit-btn">Edit</a>
+        <a href="{{ url_for('admin.assign_room_direct', room_no=r.room_no) }}" class="btn assign-btn">Assign Room</a>
+        <a href="{{ url_for('admin.delete_room', id=r._id) }}" class="btn delete-btn" onclick="return confirm('Delete this room?');">Delete</a>
+    </div>
+</div>
+{% endfor %}
+
+<footer>© 2025 SGI Living Hub | Admin Panel</footer>
+
+</body>
+</html>

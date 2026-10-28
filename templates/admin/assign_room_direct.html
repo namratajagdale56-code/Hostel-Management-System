@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Room</title>
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+        body { background:#fdecec; min-height:100vh; display:flex; flex-direction:column; }
+
+        /* NAVBAR */
+        nav {
+            width: 100%;
+            background: white;
+            padding: 12px 20px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        .logo-area img {
+            height: 45px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: #dc2626;
+        }
+
+        /* DESKTOP NAV LINKS */
+        .nav-links a {
+            margin-left: 20px;
+            color: #dc2626;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* HAMBURGER */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #dc2626;
+            cursor: pointer;
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: white;
+            width: 60%;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            flex-direction: column;
+        }
+
+        .mobile-menu a {
+            padding: 10px 0;
+            text-decoration: none;
+            color: #dc2626;
+            font-weight: 600;
+            border-bottom: 1px solid #f4c3c3;
+        }
+
+        .mobile-menu.open {
+            display: flex;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 850px) {
+            .nav-links { display: none; }
+            .hamburger { display: block; }
+        }
+
+        /* CARD */
+        .box {
+            width: 92%;
+            max-width: 450px;
+            margin: 40px auto;
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            text-align:center;
+        }
+
+        h2 {
+            color:#b91c1c;
+            font-size:26px;
+            margin-bottom:18px;
+        }
+
+        label {
+            font-weight:700;
+            display:block;
+            text-align:left;
+            margin:12px 0 5px;
+        }
+
+        select, button {
+            width:100%;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #dc2626;
+            font-size:16px;
+        }
+
+        button {
+            background:#dc2626;
+            color:white;
+            font-weight:700;
+            cursor:pointer;
+            margin-top:18px;
+        }
+
+        button:hover {
+            background:#a31212;
+        }
+
+        footer {
+            margin-top:auto;
+            background:#b91c1c;
+            color:white;
+            text-align:center;
+            padding:12px;
+            font-size:16px;
+            font-weight:600;
+        }
+    </style>
+
+    <script>
+        function toggleMenu(){
+            document.getElementById("mobileMenu").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo-area">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <div class="logo-text"><span>SGI</span> Living Hub</div>
+    </div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.manage_rooms') }}">Manage Rooms</a>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.manage_rooms') }}">Manage Rooms</a>
+    </div>
+</nav>
+
+<!-- FORM BOX -->
+<div class="box">
+    <h2>Assign Room {{ room.room_no }}</h2>
+
+    <form method="POST">
+
+        <label>Select Student</label>
+        <select name="student_id" required>
+            {% for s in students %}
+                <option value="{{ s._id }}">{{ s.full_name }} ({{ s.prn }})</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Assign Room</button>
+    </form>
+</div>
+
+<footer>
+    © 2025 SGI Living Hub | Admin Panel
+</footer>
+</body>
+</html>

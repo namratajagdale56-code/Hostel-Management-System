@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Fee | Admin Panel</title>
+
+<style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+
+    body{
+        background:#fef2f2;
+        min-height:100vh;
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav{
+        width:100%;
+        background:white;
+        padding:12px 22px;
+        border-bottom:2px solid #dc2626;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        position:sticky;
+        top:0;
+        z-index:1000;
+    }
+
+    .logo-area{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        white-space:nowrap;
+    }
+    .logo-area img{height:45px;}
+
+    .logo-text{
+        font-size:22px;
+        font-weight:700;
+    }
+    .logo-text span{color:#dc2626;}
+
+    /* Desktop Nav */
+    .nav-links{
+        display:flex;
+        gap:20px;
+    }
+    .nav-links a{
+        background:#dc2626;
+        padding:8px 16px;
+        color:white;
+        border-radius:8px;
+        font-weight:600;
+        text-decoration:none;
+    }
+
+    /* Hamburger */
+    .hamburger{
+        display:none;
+        background:none;
+        border:none;
+        color:#dc2626;
+        font-size:32px;
+        cursor:pointer;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu{
+        position:absolute;
+        top:70px;
+        right:20px;
+        width:60%;
+        background:#ffffffee;
+        padding:18px;
+        border-radius:16px;
+        flex-direction:column;
+        gap:12px;
+        display:none;
+        box-shadow:0 8px 20px rgba(0,0,0,0.25);
+        animation:fadeIn 0.25s ease;
+    }
+
+    .mobile-menu a{
+        text-decoration:none;
+        color:#dc2626;
+        font-weight:600;
+        font-size:18px;
+        border-bottom:1px solid #ffd2d2;
+        padding-bottom:6px;
+    }
+
+    .mobile-menu.open{
+        display:flex;
+    }
+
+    @keyframes fadeIn{
+        from{opacity:0;transform:translateY(-8px);}
+        to{opacity:1;transform:translateY(0);}
+    }
+
+    /* Mobile Responsive */
+    @media(max-width:850px){
+        .nav-links{display:none;}
+        .hamburger{display:block;}
+    }
+
+    /* ================= FORM CONTAINER ================= */
+    .container{
+        width:90%;
+        max-width:450px;
+        background:white;
+        margin:40px auto;
+        padding:25px;
+        border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    label{
+        font-weight:600;
+        display:block;
+        margin-top:12px;
+    }
+
+    input,select{
+        width:100%;
+        padding:10px;
+        border:1px solid #dc2626;
+        border-radius:6px;
+        margin-top:5px;
+    }
+
+    button{
+        background:#dc2626;
+        color:white;
+        border:none;
+        width:100%;
+        margin-top:18px;
+        padding:12px;
+        border-radius:6px;
+        font-weight:600;
+        cursor:pointer;
+    }
+
+    button:hover{
+        background:#b91c1c;
+    }
+
+    /* FOOTER */
+    footer{
+        margin-top:auto;
+        background:#b91c1c;
+        color:white;
+        padding:12px;
+        text-align:center;
+        font-weight:600;
+    }
+</style>
+
+<script>
+    function toggleMenu(){
+        document.getElementById("mobileMenu").classList.toggle("open");
+    }
+
+    function calculatePending(){
+        let total=document.getElementById("total").value;
+        let paid=document.getElementById("paid").value;
+        if(total && paid){
+            document.getElementById("pending").value = total - paid;
+        }
+    }
+</script>
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav>
+    <div class="logo-area">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="logo-text"><span>SGI</span> Living Hub</span>
+    </div>
+
+    <!-- Desktop -->
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    </div>
+
+    <!-- Mobile Hamburger -->
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<!-- ================= FORM PAGE ================= -->
+<div class="container">
+    <h2 style="text-align:center;color:#b91c1c;margin-bottom:10px;">Add Fee Record</h2>
+
+    <form method="POST">
+
+        <label>Select Student (PRN)</label>
+        <select name="student_prn" required>
+            <option value="">Select PRN</option>
+            {% for s in students %}
+            <option value="{{ s.prn }}">{{ s.prn }} - {{ s.full_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Semester</label>
+        <select name="semester" required>
+            <option>Sem 1</option>
+            <option>Sem 2</option>
+            <option>Sem 3</option>
+            <option>Sem 4</option>
+            <option>Sem 5</option>
+            <option>Sem 6</option>
+        </select>
+
+        <label>Total Fee Amount</label>
+        <input type="number" id="total" name="total" required oninput="calculatePending()">
+
+        <label>Paid Amount</label>
+        <input type="number" id="paid" name="paid" required oninput="calculatePending()">
+
+        <label>Pending Amount</label>
+        <input type="number" id="pending" name="pending" readonly>
+
+        <button type="submit">Save Fee</button>
+
+    </form>
+</div>
+
+<footer>
+    © 2025 SGI Living Hub | Admin Panel
+</footer>
+
+</body>
+</html>

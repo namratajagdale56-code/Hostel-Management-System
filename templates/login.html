@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login | SGI Living Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        :root { --accent:#b91c1c; --bg:#fdecec; }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+
+        body{background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+
+        /* NAVBAR */
+        nav{
+            width:100%;
+            background:#fff;
+            border-bottom:2px solid var(--accent);
+            padding:12px 20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .nav-logo{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:22px;
+            font-weight:700;
+            color:var(--accent);
+        }
+
+        .nav-logo img{ height:42px; }
+
+        .nav-links a{
+            text-decoration:none;
+            color:var(--accent);
+            font-weight:600;
+            margin-left:20px;
+        }
+
+        /* LOGIN BOX */
+        .page{flex:1;display:flex;justify-content:center;padding:25px;}
+
+        .container{
+            width:100%;
+            max-width:850px;
+            background:#fff;
+            border-radius:16px;
+            overflow:hidden;
+            display:grid;
+            grid-template-columns:300px 1fr;
+            box-shadow:0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .left{
+            background:linear-gradient(#b91c1c,#dc2626);
+            color:white;
+            padding:40px 30px;
+        }
+
+        .right{
+            padding:40px 30px;
+        }
+
+        /* FLASH MESSAGE */
+        .flash{
+            background:#ffe1e1;
+            color:#b91c1c;
+            padding:10px;
+            border-radius:6px;
+            margin-bottom:18px;
+            font-weight:600;
+        }
+
+        /* INPUT FIELDS */
+        input,select{
+            width:100%;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            margin-bottom:18px;
+            font-size:15px;
+        }
+
+        /* BUTTON */
+        .btn{
+            background:var(--accent);
+            color:white;
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .btn:hover{
+            background:#9f1616;
+        }
+
+        footer{
+            margin-top:auto;background:#b91c1c;color:white;text-align:center;padding:14px 0;
+        }
+        
+/* Mobile Responsive - Login Page */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 12px 14px;
+    width: 100%;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 18px;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.nav-logo img {
+    height: 34px;
+    width: auto;
+    max-width: 38px;
+    object-fit: contain;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.nav-links a {
+    margin-left: 0;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 10px 8px;
+        gap: 5px;
+    }
+
+    .nav-logo {
+        font-size: 15px;
+        gap: 4px;
+    }
+
+    .nav-logo img {
+        height: 29px;
+        max-width: 32px;
+    }
+
+    .nav-links {
+        gap: 9px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .page {
+        padding: 16px 10px;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .left {
+        padding: 24px 20px;
+    }
+
+    .left h2 {
+        font-size: 23px;
+    }
+
+    .right {
+        padding: 24px 20px;
+        min-width: 0;
+    }
+
+    input,
+    select,
+    .btn {
+        font-size: 16px;
+        min-height: 44px;
+    }
+
+    footer {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .nav-logo {
+        font-size: 13px;
+    }
+
+    .nav-logo img {
+        height: 25px;
+        max-width: 28px;
+    }
+
+    .nav-links {
+        gap: 7px;
+    }
+
+    .nav-links a {
+        font-size: 11px;
+    }
+
+    .left,
+    .right {
+        padding: 20px 15px;
+    }
+
+    .page {
+        padding: 12px 8px;
+    }
+}
+
+    </style>
+
+    <script>
+        function toggleLogin() {
+            let type = document.getElementById("user_type").value;
+
+            if (type === "student") {
+                document.getElementById("prn_box").style.display = "block";
+                document.getElementById("email_box").style.display = "none";
+                document.getElementById("email").value = "";
+            } 
+            else if (type === "admin") {
+                document.getElementById("email_box").style.display = "block";
+                document.getElementById("prn_box").style.display = "none";
+                document.getElementById("prn").value = "";
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="nav-logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        SGI <span style="color:black;">Living Hub</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('main.home') }}">Home</a>
+        <a href="{{ url_for('main.register') }}">Register</a>
+    </div>
+</nav>
+
+<!-- LOGIN PAGE -->
+<div class="page">
+    <div class="container">
+
+        <div class="left">
+            <h2>Welcome Back</h2>
+            <p>Login to continue.</p>
+        </div>
+
+        <div class="right">
+
+            <!-- FLASH MESSAGE -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+
+                <!-- USER TYPE -->
+                <label>Login As</label>
+                <select name="user_type" id="user_type" onchange="toggleLogin()" required>
+                    <option value="">-- Select User Type --</option>
+                    <option value="admin">Admin</option>
+                    <option value="student">Student</option>
+                </select>
+
+                <!-- ADMIN EMAIL -->
+                <div id="email_box" style="display:none;">
+                    <label>Email</label>
+                    <input type="email" name="email" id="email" placeholder="Enter email">
+                </div>
+
+                <!-- STUDENT PRN -->
+                <div id="prn_box" style="display:none;">
+                    <label>PRN</label>
+                    <input type="text" name="prn" id="prn" placeholder="Enter PRN">
+                </div>
+
+                <!-- PASSWORD -->
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter password" required>
+
+                <button class="btn">Login</button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<footer>© 2025 SGI Living Hub</footer>
+
+</body>
+</html>

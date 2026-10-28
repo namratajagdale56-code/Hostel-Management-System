@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complaint Form | SGI Living Hub</title>
+
+    <style>
+        *{
+            margin:0; padding:0;
+            box-sizing:border-box;
+            font-family:"Poppins",sans-serif;
+        }
+
+        body{
+            background:#fdecec;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* ---------------- NAVBAR (SAME AS STUDENT DASHBOARD) ---------------- */
+        nav {
+            width: 100%;
+            background: #ffffff;
+            padding: 14px 22px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            white-space: nowrap; /* <-- MAIN FIX: ALWAYS ONE LINE */
+        }
+
+        .logo img { height: 42px; }
+
+        .sgi { color: #dc2626; }
+        .lh { color: #000; }
+
+        .hamburger {
+            display: none;
+            font-size: 34px;
+            color: #dc2626;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #dc2626;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* ---------------- MOBILE NAV ---------------- */
+        @media(max-width:850px){
+
+            nav {
+                padding: 12px 18px;
+            }
+
+            .logo {
+                font-size: 18px; /* Smaller so SGI Living Hub stays on ONE LINE */
+                gap: 6px;
+                white-space: nowrap;
+            }
+
+            .logo img {
+                height: 34px; /* Reduce logo to fit */
+            }
+
+            .hamburger {
+                display: block;
+                font-size: 32px;
+            }
+
+            .nav-links {
+                display:none;
+                flex-direction:column;
+                position:absolute;
+                right:18px;
+                top:70px;
+                width:65%;
+                background:white;
+                padding:16px;
+                border-radius:12px;
+                box-shadow:0 4px 15px rgba(0,0,0,0.25);
+            }
+
+            .nav-links.open { display:flex; }
+
+            .nav-links a {
+                text-align:center;
+                padding:12px 0;
+                font-size:18px;
+            }
+        }
+
+        /* ---------------- FORM ---------------- */
+        .container{
+            width:90%;
+            max-width:500px;
+            background:white;
+            margin:40px auto;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        h2{
+            text-align:center;
+            color:#b91c1c;
+            margin-bottom:12px;
+            font-size:26px;
+            font-weight:700;
+        }
+
+        label{
+            font-weight:600;
+            margin-top:10px;
+            display:block;
+        }
+
+        input,textarea{
+            width:100%;
+            padding:10px;
+            margin-top:6px;
+            border:1px solid #dc2626;
+            border-radius:10px;
+            font-size:16px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            margin-top:20px;
+            background:#dc2626;
+            color:white;
+            font-size:18px;
+            font-weight:700;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#b91c1c;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+        footer{
+            margin-top:auto;
+            background:#b91c1c;
+            color:white;
+            text-align:center;
+            padding:12px;
+            font-size:15px;
+        }
+    </style>
+
+    <script>
+        function toggleMenu(){
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+<!-- ---------------- NAVBAR ---------------- -->
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span>
+        <span class="lh">Living Hub</span>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<!-- ---------------- FORM ---------------- -->
+<div class="container">
+    <h2>Write a Complaint</h2>
+
+    <form method="POST">
+        <label>Complaint Subject</label>
+        <input type="text" name="subject" required>
+
+        <label>Complaint Details</label>
+        <textarea name="message" rows="5" required></textarea>
+
+        <button type="submit">Submit Complaint</button>
+    </form>
+</div>
+
+<!-- ---------------- FOOTER ---------------- -->
+<footer>
+    © 2025 SGI Living Hub | Student Panel
+</footer>
+
+</body>
+</html>

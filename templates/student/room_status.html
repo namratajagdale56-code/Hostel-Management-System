@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Room Status</title>
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+
+        body {
+            background:#fdecec;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* NAVBAR */
+        nav {
+            background:#fff;
+            padding:12px 20px;
+            border-bottom:2px solid #dc2626;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:relative;
+        }
+
+        .logo {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:22px;
+            font-weight:700;
+        }
+
+        .logo img { height:42px; }
+        .sgi { color:#dc2626; }
+
+        /* Desktop Dashboard Link */
+        .desk-dashboard {
+            font-size:18px;
+            font-weight:700;
+            color:#dc2626;
+            text-decoration:none;
+            display:block;
+        }
+
+        /* Hamburger (mobile only) */
+        .hamburger {
+            font-size:32px;
+            cursor:pointer;
+            color:#dc2626;
+            display:none; /* hide by default */
+        }
+
+        /* DROPDOWN MENU (mobile only) */
+        .dropdown-menu {
+            position:absolute;
+            top:70px;
+            right:20px;
+            background:white;
+            width:170px;
+            border-radius:12px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.2);
+            display:none;
+            flex-direction:column;
+            z-index:10;
+        }
+
+        .dropdown-menu a {
+            padding:12px;
+            text-decoration:none;
+            color:#dc2626;
+            font-weight:600;
+            text-align:center;
+            border-bottom:1px solid #f2dcdc;
+        }
+
+        .dropdown-menu a:last-child { border-bottom:none; }
+
+        .dropdown-menu a:hover { background:#fdecec; }
+
+        /* MOBILE VIEW */
+        @media(max-width:768px) {
+            .desk-dashboard {
+                display:none; /* desktop link hide on mobile */
+            }
+            .hamburger {
+                display:block; /* show hamburger only on mobile */
+            }
+        }
+
+        h2 {
+            text-align:center;
+            margin:30px 0;
+            color:#b91c1c;
+            font-size:28px;
+            font-weight:700;
+        }
+
+        /* BOX DESIGN */
+        .box {
+            width:92%;
+            max-width:630px;
+            margin:auto;
+            background:#fff;
+            padding:28px;
+            border-radius:15px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        .row { margin-bottom:18px; }
+
+        .label { font-weight:700; color:#b91c1c; font-size:18px; }
+
+        .value { font-size:17px; font-weight:600; }
+
+        footer {
+            margin-top:auto;
+            background:#b91c1c;
+            color:#fff;
+            text-align:center;
+            padding:10px;
+            font-weight:600;
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("dropdown");
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        }
+    </script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span> Living Hub
+    </div>
+
+    <!-- Desktop Dashboard link -->
+    <a class="desk-dashboard" href="{{ url_for('student.dashboard') }}">Dashboard</a>
+
+    <!-- Mobile Hamburger -->
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="dropdown" class="dropdown-menu">
+        <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('student.logout') }}">Logout</a>
+    </div>
+</nav>
+
+<h2>Your Room Details</h2>
+
+{% if room %}
+<div class="box">
+
+    <div class="row">
+        <div class="label">Room Number</div>
+        <div class="value">{{ room.room_no }}</div>
+    </div>
+
+    <div class="row">
+        <div class="label">Floor</div>
+        <div class="value">{{ room.floor }}</div>
+    </div>
+
+    <div class="row">
+        <div class="label">Block</div>
+        <div class="value">{{ room.block }}</div>
+    </div>
+
+    <div class="row">
+        <div class="label">Total Beds</div>
+        <div class="value">{{ room.capacity }}</div>
+    </div>
+
+    <div class="row">
+        <div class="label">Occupied Beds</div>
+        <div class="value">{{ room.occupied }}</div>
+    </div>
+
+    <div class="row">
+        <div class="label">Available Beds</div>
+        <div class="value" style="color:green;">
+            {{ room.capacity - room.occupied }}
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+
+<h3 style="text-align:center;color:#b91c1c;margin-top:25px;font-size:20px;">
+    Room not allotted yet by Admin.
+</h3>
+
+{% endif %}
+
+<footer>
+    © 2025 SGI Living Hub | Student Panel
+</footer>
+
+</body>
+</html>

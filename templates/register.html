@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Registration | SGI Living Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        :root{
+            --accent:#b91c1c;
+            --muted:#555;
+            --bg:#f8f4f4;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+        body{background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
+
+        /* NAVBAR */
+        nav{
+            width:100%;
+            background:#fff;
+            border-bottom:2px solid #dc2626;
+            padding:12px 20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:sticky;
+            top:0; z-index:1000;
+        }
+        .nav-left{display:flex;align-items:center;gap:10px;}
+        .nav-logo{font-size:22px;font-weight:700;color:#b91c1c;}
+        .nav-links{display:flex;gap:18px;}
+        .nav-links a{text-decoration:none;color:#dc2626;font-weight:600;}
+
+        /* hamburger */
+        .hamburger{display:none;cursor:pointer;font-size:22px;border:none;background:transparent;}
+        @media (max-width:768px){
+            .nav-links{display:none;flex-direction:column;background:#fff;position:absolute;top:64px;right:12px;border:1px solid #eee;padding:12px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.08);}
+            .hamburger{display:block;}
+        }
+
+        /* MAIN */
+        .page{display:flex;justify-content:center;padding:20px;flex:1;}
+        .container{width:100%;max-width:980px;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.10);overflow:hidden;display:grid;grid-template-columns: 420px 1fr;}
+        .left{background: linear-gradient(180deg, #b91c1c, #dc2626);color:#fff;padding:35px;display:flex;flex-direction:column;justify-content:center;}
+        .right{padding:30px 32px;}
+        .row{display:flex;gap:15px;}
+        .field{width:100%;margin-bottom:14px;}
+        label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block;}
+        input, select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #dcdcdc;}
+        .btn{background:var(--accent);color:white;padding:12px 18px;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin-top:10px;width:100%;}
+        footer{background:#b91c1c;color:white;text-align:center;padding:12px 0;font-size:15px;margin-top:auto;}
+
+        /* flash message */
+        .flashes{margin-bottom:14px;}
+        .flash{padding:10px;border-radius:6px;margin-bottom:8px;}
+        .flash.success{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;}
+        .flash.danger{background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;}
+        .flash.warning{background:#fff7ed;color:#92400e;border:1px solid #ffd8a8;}
+        
+/* Mobile Responsive - Registration Page */
+@media (max-width: 768px) {
+    nav {
+        padding: 10px 14px;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .nav-left {
+        min-width: 0;
+        gap: 7px;
+    }
+
+    .nav-left img {
+        height: 34px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .nav-logo {
+        font-size: 17px;
+    }
+
+    .hamburger {
+        display: block;
+        padding: 6px 10px;
+        color: #b91c1c;
+        flex-shrink: 0;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        width: 100%;
+        position: static;
+        background: #fff;
+        border: 1px solid #eee;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 10px;
+    }
+
+    .page {
+        padding: 14px 10px;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .left {
+        padding: 24px 20px;
+    }
+
+    .left h2 {
+        font-size: 22px;
+    }
+
+    .right {
+        padding: 22px 16px;
+        min-width: 0;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .field {
+        width: 100%;
+        min-width: 0;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    input[type="file"] {
+        font-size: 14px;
+    }
+
+    .btn {
+        min-height: 46px;
+    }
+
+    footer {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 380px) {
+    .nav-logo {
+        font-size: 15px;
+    }
+
+    .left {
+        padding: 20px 16px;
+    }
+
+    .right {
+        padding: 20px 13px;
+    }
+}
+
+    </style>
+
+    <script>
+        function toggleMenu(){
+            const links = document.getElementById('nav-links');
+            links.style.display = (links.style.display === 'flex') ? 'none' : 'flex';
+        }
+        // Close menu on resize >768
+        window.addEventListener('resize', ()=> {
+            if(window.innerWidth > 768) document.getElementById('nav-links').style.display = 'flex';
+            else document.getElementById('nav-links').style.display = 'none';
+        });
+    </script>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='image/l2.jpg') }}" height="42" alt="logo">
+            <div class="nav-logo">SGI <span style="color:black;">Living Hub</span></div>
+        </div>
+
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+        <div id="nav-links" class="nav-links">
+            <a href="{{ url_for('main.home') }}">Home</a>
+            <a href="{{ url_for('main.about') }}">About</a>
+            <a href="{{ url_for('main.contact') }}">Contact</a>
+            <a href="{{ url_for('main.login') }}">Login</a>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="container">
+
+            <!-- LEFT -->
+            <div class="left">
+                <h2>Welcome Student</h2>
+                <p>Register with correct details to access the hostel dashboard.</p>
+            </div>
+
+            <!-- RIGHT FORM -->
+            <div class="right">
+
+                {# flash messages - ensure base template does not swallow flashes #}
+                <div class="flashes">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, msg in messages %}
+                          <div class="flash {{ category }}">{{ msg }}</div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- FIXED: action must point to 'main.register' and names must match backend -->
+                <form action="{{ url_for('main.register') }}" method="POST" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="field">
+                            <label>Full Name</label>
+                            <input name="full_name" required>
+                        </div>
+
+                        <div class="field">
+                            <label>PRN</label>
+                            <input name="prn" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>Department</label>
+                            <input name="department">
+                        </div>
+
+                        <div class="field">
+                            <label>Year</label>
+                            <select name="year">
+                                <option value="">Select</option>
+                                <option>1st</option>
+                                <option>2nd</option>
+                                <option>3rd</option>
+                                <option>4th</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" name="email" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Mobile</label>
+                            <input name="mobile" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>Parent Contact</label>
+                            <input name="parent_contact">
+                        </div>
+
+                        <div class="field">
+                            <label>Aadhar</label>
+                            <input name="aadhar">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Address</label>
+                        <textarea name="address"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>Room</label>
+                        <!-- backend expects room fields like room_no; if you want to store this, use 'room_no' -->
+                        <input name="room_no">
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" name="password" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Confirm Password</label>
+                            <input type="password" name="confirm_password" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Photo Upload</label>
+                        <input type="file" name="photo" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="btn">Register</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 SGI Living Hub | Student Panel
+    </footer>
+
+</body>
+</html>

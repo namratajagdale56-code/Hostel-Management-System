@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SGI Living Hub | Home</title>
+
+  <style>
+    *{
+      margin:0; padding:0;
+      box-sizing:border-box;
+      font-family:"Poppins",sans-serif;
+    }
+
+    body{
+      background:#fef2f2;
+      color:#1e293b;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav{
+      width:100%;
+      background:#ffffff;
+      border-bottom:2px solid #dc2626;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 20px;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      box-shadow:0 4px 8px rgba(0,0,0,0.06);
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:22px;
+      font-weight:700;
+      color:#b91c1c;
+    }
+
+    .logo img{
+      height:42px;
+      border-radius:6px;
+    }
+
+    .logo span{
+      color:#000;
+    }
+
+    /* Desktop Links */
+    .nav-links{
+      display:flex;
+      gap:25px;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:#dc2626;
+      font-weight:600;
+      padding:6px 10px;
+      border-radius:8px;
+      transition:.3s;
+    }
+
+    .nav-links a:hover{
+      background:#dc2626;
+      color:#fff;
+    }
+
+    /* Hamburger */
+    .hamburger{
+      display:none;
+      font-size:28px;
+      color:#dc2626;
+      background:none;
+      border:none;
+      padding:6px 10px;
+      cursor:pointer;
+      border-radius:8px;
+    }
+    .hamburger:hover{
+      background:rgba(220,38,38,0.15);
+    }
+
+    /* ================= MOBILE MENU ================= */
+    @media(max-width:850px){
+
+      .hamburger{ display:block; }
+
+      .nav-links{
+        display:none;
+        flex-direction:column;
+        position:absolute;
+        top:58px;
+        right:12px;
+        width:62%;
+        background:rgba(255,255,255,0.55);
+        backdrop-filter:blur(12px);
+        padding:10px 12px;
+        border-radius:14px;
+        box-shadow:0 4px 16px rgba(0,0,0,0.18);
+        animation:fadeMenu .2s ease;
+      }
+
+      .nav-links.open{
+        display:flex;
+      }
+
+      .nav-links a{
+        padding:7px 4px;
+        margin:2px 0;
+        font-size:16px;
+      }
+    }
+
+    @keyframes fadeMenu{
+      from{ opacity:0; transform:translateY(-5px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    /* ================= HERO ================= */
+    .hero{
+      height:420px;
+      background:
+        linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),
+        url("{{ url_for('static', filename='image/campus4.jpg') }}")
+        center/cover no-repeat;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      color:#fff;
+    }
+
+    .hero h1{
+      font-size:44px;
+      font-weight:800;
+      text-shadow:0 2px 8px rgba(0,0,0,0.7);
+    }
+
+    /* ================= FEATURES ================= */
+    .features{
+      text-align:center;
+      padding:60px 30px;
+    }
+
+    .features h2{
+      color:#7f1d1d;
+      font-size:28px;
+      margin-bottom:40px;
+      font-weight:700;
+    }
+
+    .features-row{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:25px;
+    }
+
+    .card{
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 6px 12px rgba(0,0,0,0.12);
+      color:#7f1d1d;
+      transition:.3s;
+      min-width:250px;
+      max-width:300px;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .card-title{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .card-text{
+      font-size:14px;
+      color:#444;
+      line-height:1.5;
+    }
+
+    /* ================= FOOTER ================= */
+    footer{
+      width:100%;
+      background:#b91c1c;
+      color:white;
+      padding:15px 0;
+      text-align:center;
+      margin-top:60px;
+    }
+  </style>
+
+  <script>
+    function toggleMenu(){
+      document.querySelector(".nav-links").classList.toggle("open");
+    }
+  </script>
+
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+ <nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        
+        <span style="color:#b91c1c; font-weight:700;">SGI</span>
+        <span style="color:#000; white-space: nowrap;">Living Hub</span>
+
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('main.about') }}">About</a>
+        <a href="{{ url_for('main.contact') }}">Contact</a>
+        <a href="{{ url_for('main.login') }}">Login</a>
+        <a href="{{ url_for('main.gallery') }}">Gallery</a>
+        <a href="{{ url_for('main.register') }}">Register</a>
+    </div>
+</nav>
+
+
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <h1>Welcome to SGI Living Hub</h1>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="features">
+    <h2>Our Key Features</h2>
+
+    <div class="features-row">
+
+      <div class="card">
+        <div class="card-title">👩‍🎓 Student Management</div>
+        <div class="card-text">
+          Manage student profiles, update details, view records, and maintain a complete student database.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🏠 Room Allocation</div>
+        <div class="card-text">
+          Automatically allocate rooms, check availability, avoid conflicts, and manage room shifting easily.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💰 Fee Tracking</div>
+        <div class="card-text">
+          Track hostel fee payments, dues, generate receipts, and maintain accurate financial records.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🧾 Feedback & Complaints</div>
+        <div class="card-text">
+          Students can submit issues or feedback, while admin can review, respond, and resolve them quickly.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    © 2025 SGI Living Hub
+  </footer>
+
+<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2025/11/02/14/20251102144245-VTBLD2MZ.js" defer></script>
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+
+import os
+
+class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-this-key")
+    MONGO_URI = os.environ.get(
+        "MONGO_URI",
+        "mongodb://localhost:27017/hosteler"
+    )

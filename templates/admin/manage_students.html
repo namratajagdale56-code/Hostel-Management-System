@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students | Admin Panel</title>
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+
+        body { background:#fdecec; min-height:100vh; display:flex; flex-direction:column; }
+
+        /* NAVBAR */
+        nav {
+            width:100%; background:#fff; padding:12px 20px;
+            border-bottom:2px solid #dc2626;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+
+        .logo-area { display:flex; align-items:center; gap:10px; }
+        .logo-area img { height:42px; }
+        .logo-text { font-size:22px; font-weight:700; }
+        .sgi { color:#dc2626; }
+
+        .nav-links { display:flex; gap:25px; }
+        .nav-links a { text-decoration:none; font-weight:600; color:#dc2626; }
+
+        .hamburger { display:none; background:none; border:none; font-size:28px; color:#dc2626; }
+
+        @media(max-width:850px){
+            .hamburger{ display:block; }
+            .nav-links{
+                display:none; position:absolute; right:20px; top:65px;
+                flex-direction:column; background:white; padding:15px;
+                border-radius:12px; gap:15px; width:60%;
+                box-shadow:0 5px 15px rgba(0,0,0,0.25);
+            }
+            .nav-links.open{ display:flex; }
+        }
+
+        /* TITLE */
+        h1{
+            text-align:center;
+            margin-top:20px;
+            font-size:28px;
+            font-weight:800;
+            color:#7f1d1d;
+            margin-bottom:10px;
+        }
+
+        /* DOWNLOAD BUTTONS */
+        .export-buttons{
+            width:92%; max-width:1200px; margin:auto;
+            display:flex; justify-content:flex-end;
+            gap:10px; margin-bottom:12px;
+        }
+
+        .export-btn{
+            padding:8px 15px; border-radius:6px;
+            font-size:14px; font-weight:600;
+            color:white; text-decoration:none;
+        }
+
+        .excel { background:#16a34a; }
+        .pdf { background:#dc2626; }
+
+        /* TABLE */
+        .table-container{
+            width:92%; max-width:1200px;
+            margin:auto; background:white;
+            padding:20px; border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        table { width:100%; border-collapse:collapse; }
+
+        thead {
+            background:#dc2626;
+            color:white;
+            font-size:15px;
+        }
+
+        th, td {
+            padding:12px;
+            border-bottom:1px solid #f2baba;
+            text-align:center;
+        }
+
+        .student-photo {
+            width:55px;
+            height:55px;
+            border-radius:8px;
+            object-fit:cover;
+        }
+
+        .btn{
+            padding:6px 10px; border-radius:6px;
+            color:white; font-size:13px;
+            text-decoration:none;
+        }
+        .view-btn{ background:#1d4ed8; }
+        .edit-btn{ background:#d97706; }
+        .delete-btn{ background:#dc2626; }
+
+        footer{
+            margin-top:auto;
+            background:#b91c1c;
+            color:white; padding:10px;
+            text-align:center;
+        }
+    </style>
+
+    <script>
+        function toggleMenu(){
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo-area">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <div class="logo-text"><span class="sgi">SGI</span> Living Hub</div>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<h1>Manage Students</h1>
+
+<!-- Download Buttons -->
+<div class="export-buttons">
+    <a href="{{ url_for('admin.download_students_excel') }}" class="export-btn excel">Download Excel</a>
+    <a href="{{ url_for('admin.download_students_pdf') }}" class="export-btn pdf">Download PDF</a>
+</div>
+
+<!-- STUDENTS TABLE -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Full Name</th>
+                <th>PRN</th>
+                <th>Department</th>
+                <th>Year</th>
+                <th>Mobile</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for s in students %}
+            <tr>
+                <td>
+                    {% set img = (s.photo or s.image or s.filename or s.pic or None) %}
+                    {% if img %}
+                        <img class="student-photo" src="{{ url_for('static', filename='uploads/' ~ img) }}">
+                    {% else %}
+                        <img class="student-photo" src="{{ url_for('static', filename='image/default.png') }}">
+                    {% endif %}
+                </td>
+
+                <td>{{ s.fullname or s.full_name }}</td>
+                <td>{{ s.prn }}</td>
+                <td>{{ s.department }}</td>
+                <td>{{ s.year }}</td>
+                <td>{{ s.mobile }}</td>
+
+                <td>
+                    <a href="{{ url_for('admin.view_student', id=s._id) }}" class="btn view-btn">View</a>
+                    <a href="{{ url_for('admin.edit_student', id=s._id) }}" class="btn edit-btn">Edit</a>
+                    <a href="{{ url_for('admin.delete_student', id=s._id) }}" class="btn delete-btn" onclick="return confirm('Delete?')">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    {% if students|length == 0 %}
+        <p style="text-align:center; margin-top:10px; color:#b91c1c; font-weight:600;">
+            No students found.
+        </p>
+    {% endif %}
+</div>
+
+<footer>© 2025 SGI Living Hub | Admin Panel</footer>
+
+</body>
+</html>

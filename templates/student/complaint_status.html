@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Complaints</title>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+        body{background:#fdecec;min-height:100vh;display:flex;flex-direction:column;}
+
+        /* NAVBAR */
+        nav{
+            width:100%;background:#fff;padding:12px 20px;
+            border-bottom:2px solid #dc2626;
+            display:flex;justify-content:space-between;
+            align-items:center;position:sticky;top:0;z-index:1000;
+        }
+
+        .logo{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:700;}
+        .logo img{height:40px;}
+        .sgi{color:#dc2626;}
+
+        .desk-link{
+            color:#dc2626;font-weight:700;text-decoration:none;font-size:18px;
+        }
+
+        .hamburger{
+            display:none;background:none;border:none;font-size:32px;
+            cursor:pointer;color:#dc2626;font-weight:900;
+        }
+
+        .nav-links{
+            display:none;position:absolute;top:70px;right:20px;
+            background:#fff;width:180px;padding:15px;border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.2);
+        }
+        .nav-links a{
+            display:block;padding:10px;color:#dc2626;font-weight:600;
+            text-decoration:none;border-bottom:1px solid #f3c3c3;
+        }
+        .nav-links a:last-child{border-bottom:none;}
+        .nav-links.open{display:block;}
+
+        @media(max-width:768px){
+            .desk-link{display:none;}
+            .hamburger{display:block;}
+        }
+
+        h2{
+            text-align:center;font-size:28px;margin:25px 0;color:#b91c1c;
+        }
+
+        table{
+            width:90%;max-width:900px;margin:auto;border-collapse:collapse;
+            background:#fff;border-radius:12px;overflow:hidden;
+            box-shadow:0 5px 12px rgba(0,0,0,0.15);
+        }
+
+        th, td{
+            padding:14px;border:1px solid #e4bcbc;font-size:16px;text-align:center;
+        }
+
+        th{background:#dc2626;color:white;font-size:17px;}
+
+        .pending{color:orange;font-weight:700;}
+        .progress{color:blue;font-weight:700;}
+        .done{color:green;font-weight:700;}
+
+        footer{
+            margin-top:auto;background:#b91c1c;color:white;
+            text-align:center;padding:12px;font-size:15px;
+        }
+
+        .msg{
+            text-align:center;margin-top:30px;
+            font-size:18px;color:#b91c1c;font-weight:600;
+        }
+    </style>
+
+    <script>
+        function toggleMenu(){
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span> Living Hub
+    </div>
+
+    <a class="desk-link" href="{{ url_for('student.dashboard') }}">Dashboard</a>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('student.logout') }}">Logout</a>
+    </div>
+</nav>
+
+<h2>Your Complaints</h2>
+
+{% if complaints %}
+<table>
+    <tr>
+        <th>Subject</th>
+        <th>Message</th>
+        <th>Admin Reply</th>
+        <th>Status</th>
+    </tr>
+
+    {% for c in complaints %}
+    <tr>
+        <td>{{ c.subject }}</td>
+        <td>{{ c.message }}</td>
+
+        <td>
+            {% if c.admin_reply and c.admin_reply.strip() != "" %}
+                <span style="color:green; font-weight:600;">{{ c.admin_reply }}</span>
+            {% else %}
+                <span style="color:orange; font-weight:600;">No reply yet</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if c.status == "In Progress" %}
+                <span class="progress">In Progress</span>
+            {% elif c.status == "Resolved" %}
+                <span class="done">Resolved</span>
+            {% else %}
+                <span class="pending">Pending</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<h3 class="msg">No complaints found.</h3>
+{% endif %}
+
+<footer>© 2025 SGI Living Hub | Student Panel</footer>
+
+</body>
+</html>

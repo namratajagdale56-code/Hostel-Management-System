@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Complaints | SGI Living Hub</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+        body {
+            background: #fef2f2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        nav {
+            width: 100%;
+            background: #fff;
+            padding: 14px 22px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; }
+        .logo img { height: 42px; }
+        .sgi { color: #dc2626; }
+
+        .nav-links { display: flex; gap: 22px; }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            color: #dc2626;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 32px;
+            padding: 4px 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #dc2626;
+        }
+
+        @media (max-width: 850px) {
+            .hamburger { display: block; }
+            .nav-links {
+                position: absolute;
+                right: 20px;
+                top: 70px;
+                width: 65%;
+                padding: 15px;
+                display: none;
+                flex-direction: column;
+                background: rgba(255,255,255,0.55);
+                backdrop-filter: blur(15px);
+                border-radius: 14px;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            }
+            .nav-links.open { display: flex; }
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 30px;
+            font-weight: 800;
+            color: #7f1d1d;
+        }
+
+        /* DOWNLOAD BUTTONS */
+        .download-box {
+            width: 90%;
+            max-width: 900px;
+            margin: 10px auto 0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .d-btn {
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+
+        .excel-btn { background:#059669; }
+        .excel-btn:hover { background:#047857; }
+
+        .pdf-btn { background:#dc2626; }
+        .pdf-btn:hover { background:#b91c1c; }
+
+
+        /* COMPLAINT CARDS */
+        .complaints-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .complaint-card {
+            background: #fff;
+            padding: 18px 22px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            border: 1px solid #f2caca;
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .complaint-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .pending { background: #dc2626; }
+        .progress { background: #2563eb; }
+        .resolved { background: #16a34a; }
+
+        .complaint-body { margin-top: 12px; color: #374151; line-height: 1.5; }
+
+        .reply-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fff7f7;
+            border-radius: 10px;
+            border: 1px solid #f2d2d2;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #dc2626;
+            resize: none;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #dc2626;
+        }
+
+        .reply-btn {
+            background: #16a34a;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            margin-top: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 12px;
+        }
+
+        footer {
+            background: #b91c1c;
+            color: white;
+            text-align: center;
+            padding: 12px 0;
+            margin-top: auto;
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span> <span>Living Hub</span>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<h1>Complaints</h1>
+
+<!-- DOWNLOAD BUTTONS -->
+<div class="download-box">
+    <a href="{{ url_for('admin.download_complaints_excel') }}" class="d-btn excel-btn">📥 Download Excel</a>
+    <a href="{{ url_for('admin.download_complaints_pdf') }}" class="d-btn pdf-btn">📄 Download PDF</a>
+</div>
+
+<div class="complaints-container">
+
+    {% for c in complaints %}
+    <div class="complaint-card">
+
+        <div class="complaint-header">
+            <div class="complaint-title">
+                {{ c.student_name }} — PRN: {{ c.student_prn }}
+            </div>
+
+            <div class="status 
+                {% if c.status == 'Pending' %}pending{% endif %}
+                {% if c.status == 'In Progress' %}progress{% endif %}
+                {% if c.status == 'Resolved' %}resolved{% endif %}
+            ">
+                {{ c.status }}
+            </div>
+        </div>
+
+        <div class="complaint-body">
+            {{ c.message }}
+        </div>
+
+        <!-- REPLY FORM -->
+        <form action="{{ url_for('admin.complaint_reply', id=c['_id']) }}" method="POST" class="reply-box">
+
+            <textarea name="admin_reply" placeholder="Write a reply..." required>{{ c.admin_reply }}</textarea>
+
+            <select name="status">
+                <option value="Pending"  {% if c.status=='Pending' %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if c.status=='In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Resolved" {% if c.status=='Resolved' %}selected{% endif %}>Resolved</option>
+            </select>
+
+            <button type="submit" class="reply-btn">Send Reply</button>
+        </form>
+
+        <a href="{{ url_for('admin.delete_complaint', id=c['_id']) }}"
+           class="delete-btn"
+           onclick="return confirm('Delete this complaint?')">
+           Delete
+        </a>
+
+    </div>
+
+    {% else %}
+        <p style="text-align:center; color:#b91c1c; font-size:18px;">
+            No complaints found.
+        </p>
+    {% endfor %}
+
+</div>
+
+<footer>© 2025 SGI Living Hub | Admin Panel</footer>
+
+</body>
+</html>

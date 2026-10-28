@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fee Status | SGI Living Hub</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+        body {
+            background: #fdecec;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            width: 100%;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .logo img { height: 42px; }
+        .sgi { color: #b91c1c; }
+        .lh { color: #000; }
+
+        .hamburger {
+            display: none;
+            font-size: 28px;
+            color: #dc2626;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 70px;
+            right: 18px;
+            width: 65%;
+            padding: 16px 10px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+
+        .nav-links.open { display: flex; }
+
+        .nav-links a {
+            padding: 12px;
+            font-size: 18px;
+            color: #dc2626;
+            text-align: center;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @media (max-width: 850px) {
+            .hamburger { display: block; }
+            .desk-link { display: none; }
+        }
+
+        .desk-link {
+            font-size: 18px;
+            color: #dc2626;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 30px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .fee-card {
+            width: 92%;
+            max-width: 650px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            font-size: 16px;
+            border-bottom: 1px solid #f3d4d4;
+            text-align: center;
+        }
+
+        .paid { color: green; font-weight: 700; }
+        .pending { color: #dc2626; font-weight: 700; }
+
+        footer {
+            text-align: center;
+            background: #b91c1c;
+            color: white;
+            padding: 15px;
+            margin-top: auto;
+            font-size: 15px;
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span>
+        <span class="lh">Living Hub</span>
+    </div>
+
+    <a class="desk-link" href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<h2>💰 Fee Status</h2>
+
+<div class="fee-card">
+
+    {% if fees|length > 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Sem</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Pending</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for f in fees %}
+            <tr>
+                <td>{{ f.semester }}</td>
+                <td>₹{{ f.total }}</td>
+                <td>₹{{ f.paid }}</td>
+                <td>₹{{ f.pending }}</td>
+
+                <td>
+                    {% if f.pending == 0 %}
+                        <span class="paid">✔ Paid</span>
+                    {% else %}
+                        <span class="pending">⏳ Pending</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+        <h3 style="text-align:center; margin-top:20px; color:#b91c1c;">
+            No fee status available yet.
+        </h3>
+    {% endif %}
+
+</div>
+
+<footer>
+    © 2025 SGI Living Hub | Student Panel
+</footer>
+
+</body>
+</html>

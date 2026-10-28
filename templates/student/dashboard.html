@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard | SGI Living Hub</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+        background: #ffffff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* NAVBAR */
+    nav {
+        width: 100%;
+        background: #ffffff;
+        padding: 12px 20px;
+        border-bottom: 2px solid #dc2626;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 22px;
+        font-weight: 700;
+    }
+    .logo img { height: 42px; }
+    .sgi { color: #b91c1c; font-weight: 700; }
+    .lh { color: #000; }
+
+    .logout-btn {
+        padding: 10px 14px;
+        background: #dc2626;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+    }
+    .logout-btn:hover { background: #b91c1c; }
+
+    .hamburger { display: none; font-size: 30px; background: none; border: none; color: #dc2626; }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(12px);
+        position: absolute; top: 70px; right: 20px;
+        width: 60%;
+        padding: 18px;
+        border-radius: 14px;
+    }
+    .nav-links.open { display: flex; }
+
+    @media(max-width:850px){
+        .logout{ display:none; }
+        .hamburger{ display:block; }
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 32px;
+        color: #7f1d1d;
+    }
+
+    .sub-title {
+        text-align: center;
+        margin-top: 5px;
+        color: #b91c1c;
+        font-size: 16px;
+    }
+
+    .dashboard {
+        width: 90%;
+        margin: 45px auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        justify-content: center;
+    }
+
+    .card {
+        width: 260px;
+        background: white;
+        border: 1px solid #ffc5c5;
+        border-radius: 12px;
+        padding: 30px 10px;
+        text-align: center;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 10px 22px rgba(0,0,0,0.25);
+    }
+
+    .icon { font-size: 55px; }
+    .card-title { margin-top: 12px; font-size: 18px; font-weight: 700; color:#7f1d1d; }
+
+    footer {
+        margin-top: auto;
+        text-align: center;
+        padding: 12px;
+        background: #b91c1c;
+        color: white;
+    }
+    a{
+        text-decoration: none;
+    }
+</style>
+
+<script>
+    function toggleMenu(){
+        document.querySelector(".nav-links").classList.toggle("open");
+    }
+</script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span> <span class="lh">Living Hub</span>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <form action="{{ url_for('main.logout') }}" method="GET">
+            <button class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="logout">
+        <form action="{{ url_for('main.logout') }}" method="GET">
+            <button class="logout-btn">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<h1>Student Dashboard</h1>
+<p class="sub-title">Welcome {{ student_name }} | Quick Access | Faster Controls</p>
+
+<div class="dashboard">
+
+    <!-- PROFILE -->
+    <a href="{{ url_for('main.student_profile') }}">
+        <div class="card">
+            <div class="icon">👤</div>
+            <div class="card-title">My Profile</div>
+        </div>
+    </a>
+
+    <!-- MY ROOM -->
+    <a href="{{ url_for('main.student_room_status') }}">
+        <div class="card">
+            <div class="icon">🛏️</div>
+            <div class="card-title">My Room Status</div>
+        </div>
+    </a>
+
+    <!-- ALL ROOMS -->
+    <a href="{{ url_for('main.student_all_rooms') }}">
+        <div class="card">
+            <div class="icon">🏨</div>
+            <div class="card-title">All Rooms</div>
+        </div>
+    </a>
+
+    <!-- LEAVE FORM -->
+    <a href="{{ url_for('main.student_leave_form') }}">
+        <div class="card">
+            <div class="icon">📝</div>
+            <div class="card-title">Leave Form</div>
+        </div>
+    </a>
+
+    <!-- LEAVE STATUS -->
+    <a href="{{ url_for('main.student_leave_status') }}">
+        <div class="card">
+            <div class="icon">📅</div>
+            <div class="card-title">Leave Status</div>
+        </div>
+    </a>
+
+    <!-- FEES -->
+    <a href="{{ url_for('main.student_fee_status') }}">
+        <div class="card">
+            <div class="icon">💰</div>
+            <div class="card-title">Fee Status</div>
+        </div>
+    </a>
+
+    <!-- COMPLAINT FORM -->
+    <a href="{{ url_for('main.student_complaint_form') }}">
+        <div class="card">
+            <div class="icon">📩</div>
+            <div class="card-title">Complaint Form</div>
+        </div>
+    </a>
+
+    <!-- COMPLAINT STATUS -->
+    <a href="{{ url_for('main.student_complaint_status') }}">
+        <div class="card">
+            <div class="icon">📊</div>
+            <div class="card-title">Complaint Status</div>
+        </div>
+    </a>
+
+</div>
+
+<footer>
+    © 2025 SGI Living Hub | Student Panel
+</footer>
+
+</body>
+</html>

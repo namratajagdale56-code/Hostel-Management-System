@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leave Status</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+    body{background:#fdecec;min-height:100vh;display:flex;flex-direction:column;}
+    /* NAV */
+    nav{
+      width:100%;
+      background:#fff;
+      padding:12px 18px;
+      border-bottom:2px solid #dc2626;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+    .logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;}
+    .logo img{height:40px;}
+    .sgi{color:#b91c1c;}
+    .nav-links{display:flex;gap:14px;align-items:center;}
+    .nav-links a{color:#dc2626;font-weight:700;text-decoration:none;}
+    .btn-logout{background:#dc2626;color:#fff;padding:6px 10px;border-radius:8px;text-decoration:none;font-weight:700;}
+    /* hamburger */
+    .hamburger{display:none;background:none;border:0;font-size:28px;cursor:pointer;color:#dc2626;}
+    .mobile-menu{
+      position:absolute;
+      top:70px;
+      right:14px;
+      width:78%;
+      max-width:300px;
+      background:rgba(255,255,255,0.98);
+      padding:12px;
+      border-radius:12px;
+      display:none;
+      flex-direction:column;
+      gap:8px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.12);
+    }
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{color:#b91c1c;font-weight:700;text-decoration:none;padding:8px;border-radius:8px;}
+    @media(max-width:850px){
+      .nav-links{display:none;}
+      .hamburger{display:block;}
+    }
+
+    h2{text-align:center;font-size:26px;margin:18px 0;color:#b91c1c;font-weight:700;}
+
+    .status-box{width:92%;max-width:960px;margin:12px auto;background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 15px rgba(0,0,0,0.12);}
+    .row{margin-bottom:12px;}
+    .label{font-size:16px;font-weight:700;color:#b91c1c;margin-bottom:6px;}
+    .value{font-size:15px;font-weight:600;}
+    .accepted{color:green;font-weight:700;}
+    .rejected{color:red;font-weight:700;}
+    .pending{color:orange;font-weight:700;}
+    .admin-reply{margin-top:10px;padding:12px;background:#fff5f5;border-left:4px solid #dc2626;border-radius:8px;}
+    .no-reply{margin-top:10px;padding:10px;background:#fffaf0;border-left:4px solid #f59e0b;border-radius:8px;color:#92400e;}
+    footer{margin-top:auto;background:#b91c1c;color:white;text-align:center;padding:12px;font-weight:600;}
+
+    @media(max-width:480px){
+      .logo img{height:34px;}
+      h2{font-size:20px;margin:14px 0;}
+      .status-box{padding:14px;border-radius:10px;}
+      .label{font-size:15px;}
+      .value{font-size:14px;}
+    }
+  </style>
+</head>
+
+<body>
+<nav>
+  <div class="logo">
+    <img src="{{ url_for('static', filename='image/l2.jpg') }}" alt="logo">
+    <span class="sgi">SGI</span> Living Hub
+  </div>
+
+  <!-- desktop links -->
+  <div class="nav-links" role="navigation" aria-label="main navigation">
+    <a href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+  </div>
+
+  <!-- hamburger for mobile -->
+  <button class="hamburger" id="hambtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle menu" onclick="toggleMenu()">☰</button>
+
+  <!-- mobile menu -->
+  <div class="mobile-menu" id="mobileMenu" role="menu" aria-hidden="true">
+    <a role="menuitem" href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+  </div>
+</nav>
+
+<h2>Your Leave Status</h2>
+
+{# If there are no leaves at all #}
+{% if not leaves %}
+  <div class="status-box" style="text-align:center;">
+    <p class="label">No leave requests found.</p>
+    <p class="value">You have not submitted any leave requests yet.</p>
+  </div>
+{% endif %}
+
+{# Show all leaves (Pending, Approved, Rejected) #}
+{% for l in leaves %}
+  <div class="status-box">
+    <div class="row">
+      <div class="label">From</div>
+      <div class="value">{{ l.from_date }}</div>
+    </div>
+
+    <div class="row">
+      <div class="label">To</div>
+      <div class="value">{{ l.to_date }}</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Reason</div>
+      <div class="value">{{ l.reason }}</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Days</div>
+      <div class="value">{{ l.days }}</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Status</div>
+      <div class="value">
+        {% if l.status == 'Approved' %}
+          <span class="accepted">Approved ✔</span>
+        {% elif l.status == 'Rejected' %}
+          <span class="rejected">Rejected ✖</span>
+        {% else %}
+          <span class="pending">Pending ⏳</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {# admin reply (if any). If pending and no reply, show short message #}
+    {% if l.admin_reply %}
+      <div class="row admin-reply">
+        <div class="label">Admin Reply</div>
+        <div class="value">{{ l.admin_reply }}</div>
+      </div>
+    {% else %}
+      {% if l.status == 'Pending' %}
+        <div class="no-reply">No reply yet from admin. Please wait.</div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+<footer>© 2025 SGI Living Hub | Student Panel</footer>
+
+<script>
+  const btn = document.getElementById('hambtn');
+  const mobile = document.getElementById('mobileMenu');
+
+  function toggleMenu(){
+    const isOpen = mobile.classList.toggle('open');
+    mobile.setAttribute('aria-hidden', !isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+  }
+
+  document.addEventListener('click', function(e){
+    if(!mobile.contains(e.target) && !btn.contains(e.target) && mobile.classList.contains('open')){
+      mobile.classList.remove('open');
+      mobile.setAttribute('aria-hidden', true);
+      btn.setAttribute('aria-expanded', false);
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && mobile.classList.contains('open')){
+      mobile.classList.remove('open');
+      mobile.setAttribute('aria-hidden', true);
+      btn.setAttribute('aria-expanded', false);
+    }
+  });
+</script>
+</body>
+</html>

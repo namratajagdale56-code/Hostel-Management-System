@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Status | SGI Living Hub</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+        body {
+            background: #fdecec;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= NAVBAR ================= */
+        nav {
+            width: 100%;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .logo img { height: 40px; }
+        .sgi { color: #dc2626; }
+        .lh { color: #000; }
+
+        .hamburger {
+            display: none;
+            font-size: 32px;
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        /* MOBILE NAV */
+        @media (max-width: 850px) {
+            .hamburger { display: block; }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                right: 20px;
+                top: 75px;
+                padding: 15px;
+                width: 65%;
+                background: rgba(255,255,255,0.95);
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            }
+
+            .nav-links.open { display: flex; }
+
+            .nav-links a {
+                padding: 12px;
+                font-size: 18px;
+                text-align: center;
+            }
+        }
+
+        /* ================= CONTENT ================= */
+        h2 {
+            text-align: center;
+            margin-top: 35px;  /* ⬆ Desktop spacing increased */
+            font-size: 30px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .fee-card {
+            width: 92%;
+            max-width: 650px;
+            margin: 30px auto 40px; /* more space */
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        /* SMART RESPONSIVE TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            font-size: 16px;
+            border-bottom: 1px solid #f3d4d4;
+        }
+
+        th {
+            font-weight: 700;
+        }
+
+        /* MOBILE: Convert table to column layout */
+       
+            @media (max-width: 600px) {
+    thead {
+        display: none !important;
+    }
+
+    table {
+        border: 0;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 15px;
+        background: #fff;
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #b91c1c;
+    }
+}
+
+
+        .paid { color: green; font-weight: 700; }
+        .pending { color: #dc2626; font-weight: 700; }
+
+        .back-btn {
+            width: 100%;
+            display: block;
+            background: #dc2626;
+            text-align: center;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        footer {
+            text-align: center;
+            background: #b91c1c;
+            color: white;
+            padding: 15px;
+            margin-top: auto;
+            font-size: 15px;
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span>
+        <span class="lh">Living Hub</span>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+    </div>
+</nav>
+
+<h2>💰 Fee Status</h2>
+
+<div class="fee-card">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sem</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Pending</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for f in fees %}
+            <tr>
+                <td data-label="Sem">{{ f.semester }}</td>
+                <td data-label="Total">₹{{ f.total }}</td>
+                <td data-label="Paid">₹{{ f.paid }}</td>
+                <td data-label="Pending">₹{{ f.pending }}</td>
+                <td data-label="Status">
+                    {% if f.pending == 0 %}
+                        <span class="paid">✔ Paid</span>
+                    {% else %}
+                        <span class="pending">⏳ Pending</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    © 2025 SGI Living Hub | Student Panel
+</footer>
+
+</body>
+</html>

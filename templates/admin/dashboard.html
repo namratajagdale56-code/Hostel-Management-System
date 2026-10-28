@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | SGI Living Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root { --accent: #dc2626; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        nav {
+            width: 100%;
+            background: #fff;
+            padding: 12px 20px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo img { height: 42px; }
+        .logo .sgi { color: var(--accent); font-size: 22px; font-weight: 700; }
+        .logo .hub { color: black; font-size: 22px; font-weight: 700; }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white !important;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 32px;
+            color: var(--accent);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        /* MOBILE MENU */
+        @media(max-width: 850px) {
+            .hamburger { display: block; }
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                right: 14px;
+                width: 65%;
+                display: none;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(14px);
+                border-radius: 18px;
+                padding: 18px;
+            }
+            .nav-links.open { display: flex; }
+        }
+
+        h1 {
+            text-align: center;
+            color: #7f1d1d;
+            margin-top: 35px;
+            font-size: 32px;
+        }
+
+        .sub-title {
+            text-align: center;
+            font-size: 15px;
+            color: #5b1a1a;
+            margin-bottom: 35px;
+        }
+
+        .dashboard {
+            width: 85%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+            padding-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid #f0caca;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon { font-size: 45px; margin-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: #7f1d1d; }
+
+        footer {
+            width: 100%;
+            background: #b91c1c;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        a{
+            text-decoration: none;
+            
+/* Responsive dashboard improvements */
+@media (max-width: 768px) {
+    nav {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .logo {
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .logo img {
+        height: 34px;
+        max-width: 38px;
+        object-fit: contain;
+    }
+
+    .logo .sgi,
+    .logo .hub {
+        font-size: 17px;
+    }
+
+    .hamburger {
+        font-size: 28px;
+        flex-shrink: 0;
+    }
+
+    .nav-links {
+        top: 60px;
+        right: 10px;
+        width: min(220px, calc(100vw - 20px));
+        padding: 14px;
+        background: #fff;
+        border: 1px solid #f0caca;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+        margin: 24px 12px 8px;
+        font-size: 26px;
+    }
+
+    .sub-title {
+        margin: 0 14px 24px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .dashboard {
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 0 12px 28px;
+    }
+
+    .card {
+        min-width: 0;
+        padding: 22px 8px;
+        overflow-wrap: anywhere;
+    }
+
+    .icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .card-title {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    footer {
+        padding: 12px 8px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 380px) {
+    .logo .sgi,
+    .logo .hub {
+        font-size: 15px;
+    }
+
+    .dashboard {
+        gap: 9px;
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .card {
+        padding: 18px 6px;
+    }
+
+    .card-title {
+        font-size: 13px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+}
+
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector(".nav-links").classList.toggle("open");
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+            <span class="sgi">SGI</span>
+            <span class="hub">Living Hub</span>
+        </div>
+
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+        <!-- ONE Logout Button (same used for desktop + mobile) -->
+        <div class="nav-links">
+            <a href="{{ url_for('admin.logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <h1>Admin Dashboard</h1>
+    <p class="sub-title">Smart Controls | Faster Management | Better Efficiency</p>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <a href="{{ url_for('admin.manage_students') }}">
+                <div class="icon">👨‍🎓</div>
+                <div class="card-title">Manage Students</div>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="{{ url_for('admin.manage_rooms') }}">
+                <div class="icon">🏢</div>
+                <div class="card-title">Manage Rooms</div>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="{{ url_for('admin.fees') }}">
+                <div class="icon">💰</div>
+                <div class="card-title">Fees Management</div>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="{{ url_for('admin.complaints') }}">
+                <div class="icon">📩</div>
+                <div class="card-title">Complaints</div>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="{{ url_for('admin.leave_requests') }}">
+                <div class="icon">📅</div>
+                <div class="card-title">Leave Requests</div>
+            </a>
+        </div>
+
+    </div>
+
+    <footer>© 2025 SGI Living Hub | Admin Panel</footer>
+
+</body>
+
+</html>

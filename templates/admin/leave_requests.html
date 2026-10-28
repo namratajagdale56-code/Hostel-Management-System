@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Requests | Admin Panel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body { background: #fdecec; min-height: 100vh; display: flex; flex-direction: column; }
+    nav { width: 100%; background: white; padding: 14px 22px; border-bottom: 2px solid #dc2626; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+    .logo img { height: 45px; }
+    .sgi { color: #dc2626; }
+    .nav-links { display: flex; gap: 18px; }
+    .nav-links a { color: #dc2626; font-weight: 600; text-decoration: none; font-size: 16px; }
+    .hamburger { display: none; background: none; border: none; font-size: 32px; cursor: pointer; color: #dc2626; }
+    .mobile-menu { position: absolute; top: 70px; right: 20px; width: 60%; background: rgba(255,255,255,0.95); padding: 18px; border-radius: 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.25); animation: fadeIn 0.25s ease; }
+    .mobile-menu a { text-decoration: none; color: #dc2626; font-weight: 600; font-size: 18px; border-bottom: 1px solid #ffd2d2; padding-bottom: 6px; }
+    .mobile-menu.open { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @media(max-width:850px){ .hamburger { display: block; } .nav-links { display: none; } }
+    .download-box { width: 92%; max-width: 1100px; margin: 22px auto 10px; display: flex; gap: 12px; }
+    .d-btn { padding: 10px 18px; color: white; border-radius: 8px; font-weight: 600; text-decoration: none; }
+    .excel-btn { background:#059669; } .excel-btn:hover { background:#047857; }
+    .pdf-btn { background:#dc2626; } .pdf-btn:hover { background:#b91c1c; }
+    .card-list { width: 92%; margin: 10px auto 25px; }
+    .card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+    .label { font-weight: 600; color: #b91c1c; margin-bottom: 3px; }
+    .value { margin-bottom: 10px; }
+    textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; margin-top: 6px; }
+    select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dc2626; font-size: 16px; margin-top: 5px; }
+    .save-btn { display:inline-block; background:#059669; color:white; padding:8px 12px; border-radius:8px; margin-top:10px; text-decoration:none; border:none; font-weight:600; cursor:pointer; }
+    .delete-btn { display: inline-block; background: #dc2626; color: white; padding: 10px 14px; border-radius: 7px; font-size: 14px; margin-top: 12px; font-weight: 600; text-decoration: none; }
+    .delete-btn:hover { background: #b91c1c; }
+    footer { background:#b91c1c; padding:12px; text-align:center; color:white; margin-top:auto; }
+  </style>
+
+  <script>
+    /* MOBILE MENU */
+    function toggleMenu(){ document.getElementById("mobileMenu").classList.toggle("open"); }
+    /* NOTE: removed updateStatus() usage — form POST will handle updates to avoid accidental overwrites */
+  </script>
+</head>
+
+<body>
+<nav>
+  <div class="logo">
+    <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+    <span><span class="sgi">SGI</span> Living Hub</span>
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+  </div>
+</nav>
+
+<h2 style="text-align:center; color:#b91c1c; margin:20px 0;">Leave Requests</h2>
+
+<div class="download-box">
+  <a href="{{ url_for('admin.download_leaves_excel') }}" class="d-btn excel-btn">📥 Download Excel</a>
+  <a href="{{ url_for('admin.download_leaves_pdf') }}" class="d-btn pdf-btn">📄 Download PDF</a>
+</div>
+
+<div class="card-list">
+  {% for l in leaves %}
+    <div class="card">
+      <div class="label">Name</div>
+      <div class="value">{{ l.student_name }}</div>
+
+      <div class="label">PRN</div>
+      <div class="value">{{ l.student_prn }}</div>
+
+      <div class="label">From Date</div>
+      <div class="value">{{ l.from_date }}</div>
+
+      <div class="label">To Date</div>
+      <div class="value">{{ l.to_date }}</div>
+
+      <div class="label">Reason</div>
+      <div class="value">{{ l.reason }}</div>
+
+      <div class="label">Days</div>
+      <div class="value">{{ l.days }}</div>
+
+      <!-- ====== Reply form (posts reply + status) ====== -->
+      <form action="{{ url_for('admin.leave_reply', id=l._id) }}" method="post">
+        <div class="label">Reply</div>
+        <div class="value">
+          <textarea name="reply" rows="3" placeholder="Write a reply...">{{ l.admin_reply or '' }}</textarea>
+        </div>
+
+        <div class="label">Status</div>
+        <div class="value">
+          <select name="status">
+            <option value="Pending"  {% if l.status=='Pending' %}selected{% endif %}>Pending</option>
+            <option value="Approved" {% if l.status=='Approved' %}selected{% endif %}>Approved</option>
+            <option value="Rejected" {% if l.status=='Rejected' %}selected{% endif %}>Rejected</option>
+          </select>
+        </div>
+
+        <button type="submit" class="save-btn">Save Reply</button>
+
+        <!-- delete link remains outside the form or you can keep it here if desired -->
+        <a class="delete-btn"
+           href="{{ url_for('admin.delete_leave', id=l._id) }}"
+           onclick="return confirm('Delete this leave request?');"
+           style="float:right; margin-left:10px;">Delete</a>
+      </form>
+
+      <div style="clear:both;"></div>
+    </div>
+  {% else %}
+    <p style="text-align:center;">No leave requests available.</p>
+  {% endfor %}
+</div>
+
+<footer>© 2025 SGI Living Hub | Admin Panel</footer>
+</body>
+</html>

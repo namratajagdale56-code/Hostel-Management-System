@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | SGI Living Hub</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background-color: #fef2f2;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav {
+      width: 100%;
+      background: #fff;
+      border-bottom: 2px solid #dc2626;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #b91c1c;
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 6px;
+    }
+
+    .logo span {
+      color: #000;
+    }
+
+    /* Desktop nav links */
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #dc2626;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    /* ================= HAMBURGER (same size as Home page) ================= */
+    .hamburger {
+      display: none;
+      font-size: 28px;
+      color: #dc2626;
+      background: none;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      line-height: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(220, 38, 38, 0.12);
+    }
+
+    /* ================= MOBILE MENU ================= */
+    @media(max-width: 850px) {
+
+      .hamburger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+
+        position: absolute;
+        top: 65px;
+        right: 18px;
+
+        width: 65%;
+        padding: 12px 14px;
+
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+
+        border-radius: 18px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+
+        animation: fadeMenu .25s ease;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 10px;
+        margin: 3px 0;
+        font-size: 17px;
+        color: #dc2626;
+      }
+    }
+
+    @keyframes fadeMenu {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ================= CONTACT CARD ================= */
+    .contact-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .contact-card {
+      background: #fff;
+      padding: 40px 45px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .contact-card h2 {
+      color: #b91c1c;
+      font-size: 26px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .contact-card p {
+      font-size: 16px;
+      margin: 12px 0;
+      color: #374151;
+      word-wrap: break-word;
+    }
+
+    .contact-card a {
+      color: #dc2626;
+      text-decoration: none;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      width: 100%;
+      background: #b91c1c;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector(".nav-links").classList.toggle("open");
+    }
+  </script>
+
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        
+        <span style="color:#b91c1c; font-weight:700;">SGI</span>
+        <span style="color:#000; white-space: nowrap;">Living Hub</span>
+
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+       <a href="{{ url_for('main.home') }}">Home</a>
+        <a href="{{ url_for('main.about') }}">About</a>
+        <a href="{{ url_for('main.login') }}">Login</a>
+        <a href="{{ url_for('main.gallery') }}">Gallery</a>
+        <a href="{{ url_for('main.register') }}">Register</a>
+    </div>
+</nav>
+
+
+  <!-- ================= CONTACT CONTENT ================= -->
+  <div class="contact-container">
+    <div class="contact-card">
+      <h2>Contact Us</h2>
+
+      <p><strong>Email:</strong><br>
+        <a href="mailto:registrar@sanjayghodawatuniversity.ac.in">
+          registrar@sanjayghodawatuniversity.ac.in
+        </a>
+      </p>
+
+      <p><strong>Phone:</strong><br>
+        <a href="tel:+919011039800">+91 90110 39800 / 90110 22567</a>
+      </p>
+
+      <p><strong>Address:</strong><br>
+        Kolhapur - Sangli Highway, A/p Atigre - 416118,<br>
+        Tal. Hatkanangale, Dist. Kolhapur, Maharashtra.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    © 2025 SGI Living Hub
+  </footer>
+
+</body>
+
+</html>

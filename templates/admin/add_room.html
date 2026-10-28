@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Room | Admin Panel</title>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+
+body {
+    background:#f9e5e5;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* NAVBAR */
+nav {
+    width:100%;
+    background:#ffffff;
+    padding:14px 25px;
+    border-bottom:2px solid #dc2626;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:700;
+}
+.logo img { height:45px; }
+.sgi { color:#dc2626; }
+
+/* NAV LINKS */
+.nav-links { display:flex; gap:25px; }
+.nav-links a { text-decoration:none; color:#dc2626; font-weight:600; }
+.nav-links a:hover { color:#a20f0f; }
+
+/* Mobile */
+.hamburger {
+    display:none; 
+    font-size:32px;
+    background:none;
+    border:none;
+    color:#dc2626;
+    cursor:pointer;
+}
+
+@media(max-width:850px){
+    .hamburger { display:block; }
+    .nav-links {
+        display:none;
+        flex-direction:column;
+        gap:18px;
+        position:absolute;
+        right:20px;
+        top:70px;
+        width:58%;
+        background:white;
+        backdrop-filter: blur(8px);
+        border-radius:18px;
+        padding:22px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.25);
+    }
+    .nav-links.open { display:flex; }
+}
+
+/* FORM */
+.container {
+    width:92%;
+    max-width:600px;
+    margin:40px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+h2 {
+    text-align:center;
+    color:#7a1a1a;
+    margin-bottom:20px;
+    font-size:26px;
+}
+
+label {
+    font-weight:600;
+    color:#7a1a1a;
+}
+
+input, select {
+    width:100%;
+    padding:12px;
+    margin:8px 0 18px;
+    border:1px solid #d5a7a7;
+    border-radius:8px;
+}
+
+input[readonly] { background:#f7f1f1; }
+
+button {
+    width:100%;
+    background:#dc2626;
+    color:white;
+    padding:12px;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+}
+button:hover { background:#b91c1c; }
+
+footer {
+    background:#b91c1c;
+    color:white;
+    padding:12px 0;
+    text-align:center;
+    margin-top:auto;
+    font-weight:600;
+}
+</style>
+
+<script>
+function toggleMenu() {
+    document.querySelector(".nav-links").classList.toggle("open");
+}
+
+function updateBeds() {
+    let capacity = parseInt(document.getElementById("capacity").value) || 0;
+    let occupied = parseInt(document.getElementById("occupied").value) || 0;
+
+    if (occupied > capacity) {
+        alert("Occupied beds cannot be greater than total capacity!");
+        document.getElementById("occupied").value = "";
+        document.getElementById("available_beds").value = capacity;
+        return;
+    }
+
+    document.getElementById("available_beds").value = capacity - occupied;
+}
+</script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='image/l2.jpg') }}">
+        <span class="sgi">SGI</span> Living Hub
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="nav-links">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.manage_rooms') }}">Rooms</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Add New Room</h2>
+
+    <form method="POST">
+
+        <label>Room Number</label>
+        <input type="text" name="room_no" required>
+
+        <label>Total Capacity (Total Beds)</label>
+        <input type="number" id="capacity" name="capacity" required oninput="updateBeds()">
+
+        <label>Occupied Beds (Already Allotted)</label>
+        <input type="number" id="occupied" name="occupied" required oninput="updateBeds()">
+
+        <label>Available Beds</label>
+        <input type="number" id="available_beds" name="available_beds" readonly>
+
+        <label>Floor</label>
+        <input type="text" name="floor" required>
+
+        <label>Block</label>
+        <select name="block" required>
+            <option value="">Select Block</option>
+            <option value="H3">H3</option>
+            <option value="H4">H4</option>
+        </select>
+
+        <button type="submit">Add Room</button>
+    </form>
+</div>
+
+<footer>© 2025 SGI Living Hub | Admin Panel</footer>
+
+</body>
+</html>

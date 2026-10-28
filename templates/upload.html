@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Upload Team Photo</title>
+  <style>
+    body{font-family:Poppins,Arial,sans-serif;padding:28px;background:#f6f6f6}
+    .card{max-width:520px;margin:30px auto;padding:18px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    input[type=file], input[type=text]{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd}
+    button{background:#dc2626;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+    .flash{padding:10px;border-radius:6px;margin-bottom:10px}
+    .flash.success{background:#e6ffed;color:#064e3b}
+    .flash.danger{background:#ffe6e6;color:#7f1d1d}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Upload Team Photo</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash {{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" enctype="multipart/form-data">
+      <label>Choose image (png/jpg/jpeg/webp/gif):</label>
+      <input type="file" name="photo" accept="image/*" required>
+
+      <label>Target filename (example: <code>sonali.jpg</code>)</label>
+      <input type="text" name="target_name" placeholder="sonali.jpg" required>
+
+      <p style="font-size:13px;color:#555">After upload you will find file in <code>/static/image/&lt;target_name&gt;</code>.</p>
+
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+</body>
+</html>
